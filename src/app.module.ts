@@ -12,15 +12,14 @@ import { AppService } from './app.service';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const dbUrl = configService.get('POSTGRES_URL') || configService.get('DATABASE_URL');
+        const dbUrl =
+          configService.get('STORAGE_POSTGRES_URL') ||
+          configService.get('STORAGE_DATABASE_URL') ||
+          configService.get('POSTGRES_URL') ||
+          configService.get('DATABASE_URL');
 
         if (!dbUrl) {
-          console.error('Environment Variables Check:');
-          console.error('Available keys:', Object.keys(process.env).join(', '));
-          console.error('Value of POSTGRES_URL:', process.env.POSTGRES_URL ? 'DEFINED (Hidden)' : 'UNDEFINED');
-          console.error('Value of DATABASE_URL:', process.env.DATABASE_URL ? 'DEFINED (Hidden)' : 'UNDEFINED');
-
-          throw new Error('DATABASE_URL or POSTGRES_URL is not defined in process.env. See logs for available keys.');
+          throw new Error('Database connection string not found. Checked: STORAGE_POSTGRES_URL, POSTGRES_URL, DATABASE_URL.');
         }
         return {
           type: 'postgres',
