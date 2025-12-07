@@ -12,7 +12,7 @@ import { AppService } from './app.service';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const dbUrl = configService.get('POSTGRES_URL') || configService.get('DATABASE_URL');
+        const dbUrl = configService.get('POSTGRES_URL') || configService.get('STORAGE_URL');
         if (!dbUrl) {
           throw new Error('DATABASE_URL or POSTGRES_URL is not defined. Please verify the database is linked in Vercel Storage settings.');
         }
