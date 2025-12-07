@@ -12,9 +12,15 @@ import { AppService } from './app.service';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const dbUrl = configService.get('POSTGRES_URL') || configService.get('STORAGE_URL');
+        const dbUrl = configService.get('POSTGRES_URL') || configService.get('DATABASE_URL');
+
         if (!dbUrl) {
-          throw new Error('DATABASE_URL or POSTGRES_URL is not defined. Please verify the database is linked in Vercel Storage settings.');
+          console.error('Environment Variables Check:');
+          console.error('Available keys:', Object.keys(process.env).join(', '));
+          console.error('Value of POSTGRES_URL:', process.env.POSTGRES_URL ? 'DEFINED (Hidden)' : 'UNDEFINED');
+          console.error('Value of DATABASE_URL:', process.env.DATABASE_URL ? 'DEFINED (Hidden)' : 'UNDEFINED');
+
+          throw new Error('DATABASE_URL or POSTGRES_URL is not defined in process.env. See logs for available keys.');
         }
         return {
           type: 'postgres',
