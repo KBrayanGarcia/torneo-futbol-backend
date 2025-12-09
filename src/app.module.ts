@@ -7,6 +7,8 @@ import { TournamentsModule } from './tournaments/tournaments.module';
 import { PlayersModule } from './players/players.module';
 import { TeamsModule } from './teams/teams.module';
 import { MatchesModule } from './matches/matches.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { MatchesModule } from './matches/matches.module';
     PlayersModule,
     TeamsModule,
     MatchesModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
