@@ -3,6 +3,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TournamentsModule } from './tournaments/tournaments.module';
+import { PlayersModule } from './players/players.module';
+import { TeamsModule } from './teams/teams.module';
+import { MatchesModule } from './matches/matches.module';
 
 @Module({
   imports: [
@@ -19,7 +23,9 @@ import { AppService } from './app.service';
           configService.get('DATABASE_URL');
 
         if (!dbUrl) {
-          throw new Error('Database connection string not found. Checked: STORAGE_POSTGRES_URL, POSTGRES_URL, DATABASE_URL.');
+          throw new Error(
+            'Database connection string not found. Checked: STORAGE_POSTGRES_URL, POSTGRES_URL, DATABASE_URL.',
+          );
         }
         return {
           type: 'postgres',
@@ -36,8 +42,12 @@ import { AppService } from './app.service';
       },
       inject: [ConfigService],
     }),
+    TournamentsModule,
+    PlayersModule,
+    TeamsModule,
+    MatchesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
