@@ -40,13 +40,23 @@ export class TeamsService {
   }
 
   async update(id: string, updateTeamDto: UpdateTeamDto) {
-    // Handling relations in update is more complex, for now basic update
-    // If we need to update players, we'd need to fetch, merge, etc.
-    // Keeping it simple for prototype: just update fields, ignore players update for now unless needed.
-    // Actually, let's just do a basic save for properties.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { playerIds, ...teamData } = updateTeamDto;
+
+    // First update scalar fields
     await this.teamRepository.update(id, teamData);
+
+    // If playerIds provided, update relations
+    if (playerIds) {
+      const team = await this.findOne(id);
+      if (team) {
+        const players = await this.playerRepository.findBy({
+          id: In(playerIds),
+        });
+        team.players = players;
+        await this.teamRepository.save(team);
+      }
+    }
+
     return this.findOne(id);
   }
 
