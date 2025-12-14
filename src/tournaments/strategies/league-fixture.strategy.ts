@@ -18,12 +18,8 @@ export class LeagueFixtureStrategy {
   ) {}
 
   generate(tournament: Tournament): Partial<Match>[] {
-    const teams = [...tournament.participants];
+    const teams = this.shuffleArray([...tournament.participants]);
     const config = tournament.config as unknown as TournamentConfig;
-
-    this.logger.debug(
-      `Teams count: ${teams.length}, Config: ${JSON.stringify(config)}`,
-    );
 
     if (teams.length < 2) {
       this.logger.warn('Not enough teams to generate fixture.');
@@ -35,6 +31,7 @@ export class LeagueFixtureStrategy {
       teams,
       !!config.hasReturnLeg,
     );
+    this.logger.log(`Generated ${roundPairings.length} pairings locally.`);
 
     // 2. Generate Dates (Calendar)
     const totalRounds = roundPairings[roundPairings.length - 1]?.round || 0;
@@ -110,5 +107,12 @@ export class LeagueFixtureStrategy {
     }
 
     return matches;
+  }
+  private shuffleArray<T>(array: T[]): T[] {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
 }

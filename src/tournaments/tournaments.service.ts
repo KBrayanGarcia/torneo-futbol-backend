@@ -98,12 +98,9 @@ export class TournamentsService {
       }
 
       this.logger.log('Deleting existing matches...');
-      await this.matchRepository
-        .createQueryBuilder()
-        .delete()
-        .from(Match)
-        .where('tournamentId = :id', { id: tournament.id })
-        .execute();
+      await this.matchRepository.delete({
+        tournament: { id: tournament.id },
+      });
 
       // Delegate fixture logic to service
       const generatedMatches = this.fixtureGenerator.generate(tournament);

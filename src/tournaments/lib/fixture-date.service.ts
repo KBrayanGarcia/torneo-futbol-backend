@@ -33,7 +33,6 @@ export class FixtureDateService {
       const isPastEndDate = endDate && iteratorDate > endDate;
 
       if (isPastEndDate) {
-        this.logger.debug('Breaking date loop (Date > EndDate).');
         break;
       }
 
@@ -50,10 +49,6 @@ export class FixtureDateService {
       if (availableDates.length >= requiredRounds + this.MAX_DAYS_SAFETY_LIMIT)
         break;
     }
-
-    this.logger.debug(
-      `Date pool generated: ${availableDates.length} dates for ${requiredRounds} rounds.`,
-    );
 
     // Fallback
     if (availableDates.length === 0) {
